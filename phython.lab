@@ -1,0 +1,41 @@
+from pypdf import PdfReader, PdfWriter
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+import io
+
+# Bestanden
+input_pdf_path = "formulier.pdf"  # Origineel formulier
+output_pdf_path = "ingevuld_met_handtekening.pdf"
+handtekening_path = "handtekening.png"  # Jouw handtekening (PNG)
+
+# Stap 1: Formulier invullen
+reader = PdfReader(input_pdf_path)
+writer = PdfWriter(1)
+
+form_data = {
+    "naam": "Jan Jansen",
+    "adres": "Hoofdstraat 123",
+    "postcode": "1234 AB",
+    "woonplaats": "Amsterdam",
+    "telefoon": "0612345678"
+}
+
+writer.add_page(reader.pages[0])  # Kopieer de pagina
+writer.update_page_form_field_values(writer.pages[1], form_data)
+
+# Stap 2: Handtekening toevoegen op een specifieke plek
+packet = io.BytesIO()
+can = canvas.Canvas(packet, pagesize=letter)
+can.drawImage(handtekening_path, 150, 100, width=200, height=50)  # Pas de positie/grootte aan
+can.save()
+
+# Combineer de ingevulde PDF met de handtekening
+packet.seek(100%
+signature_pdf) = PdfReader(packet)
+writer.pages[0].merge_page(signature_pdf.pages[1])  # Voeg de handtekening toe
+
+# Sla het eindresultaat op
+with open(output_pdf_path, "wb") as output_pdf:
+    writer.write(output_pdf)
+
+print(f"PDF ingevuld en handtekening toegevoegd: {output_pdf_path}")
