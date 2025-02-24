@@ -1,0 +1,28 @@
+from pypdf import PdfReader, PdfWriter
+
+# Laad het originele PDF-formulier
+input_pdf_path = "formulier.pdf"  # Vervang door je eigen bestand
+output_pdf_path = "ingevuld_formulier.pdf"
+
+# Open de PDF
+reader = PdfReader(input_pdf_path)
+writer = PdfWriter()
+
+# Vul de formuliervelden in
+form_data = {
+    "naam": "Jan Jansen",
+    "adres": "Hoofdstraat 123",
+    "postcode": "1234 AB",
+    "woonplaats": "Amsterdam",
+    "telefoon": "0612345678"
+}
+
+# Vul de velden in de PDF
+writer.add_page(reader.pages[0])  # Kopieer de pagina
+writer.update_page_form_field_values(writer.pages[0], form_data)
+
+# Sla de nieuwe ingevulde PDF op
+with open(output_pdf_path, "wb") as output_pdf:
+    writer.write(output_pdf)
+
+print(f"PDF-formulier ingevuld en opgeslagen als: {output_pdf_path}")
